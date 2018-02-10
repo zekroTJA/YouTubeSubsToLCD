@@ -1,0 +1,41 @@
+#!/bin/bash
+
+PYTHON_CMD="python3"
+INSTALL_PATH="./"
+SCREEN_NAME="display"
+LOGGING=true
+
+##############################################
+
+exists() {
+    type $1 &> /dev/null ;
+}
+
+error() {
+    local C_RED="\e[31m"
+    local C_RESET="\e[0m"
+    echo -e "$C_RED[ERROR]$C_RESET $1"
+    exit
+}
+
+if ! exists $PYTHON_CMD
+then
+    error "Please install python version '$PYTHON_CMD' to run this program!"
+fi
+
+if ! exists screen
+then
+    error "Can not run script in screen server mode. Please install 'screen' with your package manager."
+fi
+
+if ! [ -f $INSTALL_PATH/start.py ]
+then
+    error "Invalid start path! Please configure the install path where the 'start.py' script is located!"
+fi
+
+if $LOGGING
+then
+    screen -L -S $SCREEN_NAME $PYTHON_CMD $INSTALL_PATH/start.py $1 $2 $3 $4
+else
+    screen -S $SCREEN_NAME $PYTHON_CMD $INSTALL_PATH/start.py $1 $2 $3 $4
+fi

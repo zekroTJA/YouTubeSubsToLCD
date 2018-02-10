@@ -1,4 +1,7 @@
-﻿import smbus
+﻿# THIS CODE IS © BY tutorials-raspberrypi.de
+# ALL RIGHTS TO THEM
+
+import smbus
 from time import *
 
 class i2c_device:

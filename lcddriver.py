@@ -1,4 +1,7 @@
-﻿import sys
+﻿# THIS CODE IS © BY tutorials-raspberrypi.de
+# ALL RIGHTS TO THEM
+
+import sys
 sys.path.append("./lib")
 
 import i2c_lib

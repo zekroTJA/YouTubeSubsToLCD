@@ -2,6 +2,7 @@ import lcddriver
 from time import *
 import requests
 import json
+import sys
 
 lcd = lcddriver.lcd()
 lcd.lcd_clear()
@@ -11,6 +12,11 @@ views = ''
 delta = 0
 time = 0
 s_subs = 0
+arg_user = None
+arg_interval = None
+debug = False
+
+argv = sys.argv[1:]
 
 with open('settings.json') as f:
         config = json.loads(f.read())
@@ -19,7 +25,9 @@ def get_data():
     global subs, views, s_subs, time, delta
     
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
-    url = 'https://www.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics&forUsername={}&key={}'.format(config['channel'], config['key'])
+    url = 'https://www.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics&forUsername={}&key={}'.format(
+        arg_user if arg_user != None else config['channel'], config['key']
+    )
 
     ytdata = json.loads(requests.get(url, headers=headers).text)['items'][0]['statistics']
     
@@ -47,6 +55,19 @@ def pointalize(string):
     return out[:-1]
 
 
+if len(argv) > 0:
+    global arg_user, arg_interval, debug
+    if '-u' in argv:
+        arg_user = argv[argv.index('-u') + 1]
+    if '-i' in argv:
+        arg_interval = argv[argv.index('-i') + 1]
+    if '-d' in argv:
+        debug = True
+
+
+
+print("INITIALIZED WITH CHANNEL: " + arg_user if arg_user != None else config['channel'])
+
 while (True):
     def _delta():
         return '+' + str(delta) if delta >= 0 else '-' + str(delta)
@@ -62,8 +83,9 @@ while (True):
     lcd.lcd_clear()
     lcd.lcd_display_string(_subs(), 1)
     lcd.lcd_display_string(strftime("%H:%M:%S", gmtime()), 2)
-    print(
-        _subs() + '\n' +
-        strftime("%H:%M:%S", gmtime())
-    )
-    sleep(config['interval'])
+    if debug:
+        print(
+            _subs() + '\n' +
+            strftime("%H:%M:%S", gmtime())
+        )
+    sleep(arg_interval if arg_interval != None else config['interval'])
