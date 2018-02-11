@@ -1,4 +1,4 @@
-import lcddriver
+from lib import lcddriver
 from time import *
 import requests
 import json
@@ -66,7 +66,7 @@ if len(argv) > 0:
 
 
 
-print("INITIALIZED WITH CHANNEL: " + arg_user if arg_user != None else config['channel'])
+print("INITIALIZED WITH CHANNEL: " + (arg_user if arg_user != None else config['channel']) + "\n")
 
 while (True):
     def _delta():
@@ -82,10 +82,10 @@ while (True):
     get_data()
     lcd.lcd_clear()
     lcd.lcd_display_string(_subs(), 1)
-    lcd.lcd_display_string(strftime("%H:%M:%S", gmtime()), 2)
+    lcd.lcd_display_string(strftime("%H:%M:%S", localtime()), 2)
     if debug:
         print(
             _subs() + '\n' +
-            strftime("%H:%M:%S", gmtime())
+            strftime("%H:%M:%S", localtime())
         )
     sleep(arg_interval if arg_interval != None else config['interval'])
