@@ -1,11 +1,7 @@
-from lib import lcddriver
 from time import *
 import requests
 import json
 import sys
-
-lcd = lcddriver.lcd()
-lcd.lcd_clear()
 
 subs = ''
 views = ''
@@ -15,15 +11,33 @@ s_subs = 0
 arg_user = None
 arg_interval = None
 debug = False
+display = True
+lcd = None
 
 argv = sys.argv[1:]
 
+if len(argv) > 0:
+    if '-u' in argv:
+        arg_user = argv[argv.index('-u') + 1]
+    if '-i' in argv:
+        arg_interval = argv[argv.index('-i') + 1]
+    if '-d' in argv:
+        debug = True
+    if '--nodisplay' in argv:
+        display = False
+
+
+if display:
+    from lib import lcddriver
+    lcd = lcddriver.lcd()
+    lcd.lcd_clear()
+
+
 with open('settings.json') as f:
-        config = json.loads(f.read())
+    config = json.loads(f.read())
 
 def get_data():
-    global subs, views, s_subs, time, delta
-    
+    global subs, views, s_subs, time
     headers = {'User-Agent': 'Mozilla/5.0 (Macintosh; Intel Mac OS X 10_10_1) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/39.0.2171.95 Safari/537.36'}
     url = 'https://www.googleapis.com/youtube/v3/channels?part=snippet%2CcontentDetails%2Cstatistics&forUsername={}&key={}'.format(
         arg_user if arg_user != None else config['channel'], config['key']
@@ -53,18 +67,7 @@ def pointalize(string):
         out = string[_notneg(c_len - 3):c_len] + '.' + out
         c_len -= 3
     return out[:-1]
-
-
-if len(argv) > 0:
-    global arg_user, arg_interval, debug
-    if '-u' in argv:
-        arg_user = argv[argv.index('-u') + 1]
-    if '-i' in argv:
-        arg_interval = argv[argv.index('-i') + 1]
-    if '-d' in argv:
-        debug = True
-
-
+    
 
 print("INITIALIZED WITH CHANNEL: " + (arg_user if arg_user != None else config['channel']) + "\n")
 
@@ -80,9 +83,10 @@ while (True):
         return out
 
     get_data()
-    lcd.lcd_clear()
-    lcd.lcd_display_string(_subs(), 1)
-    lcd.lcd_display_string(strftime("%H:%M:%S", localtime()), 2)
+    # lcd.lcd_clear()
+    if display:
+        lcd.lcd_display_string(_subs(), 1)
+        lcd.lcd_display_string(strftime("%H:%M:%S", localtime()), 2)
     if debug:
         print(
             _subs() + '\n' +

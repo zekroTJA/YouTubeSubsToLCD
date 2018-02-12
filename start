@@ -26,6 +26,7 @@ if [ $1 = 'h' ] || [ $1 = 'help' ]; then
     echo "  -u <channame>   Custom YT cannel name"
     echo "  -i <interval>   Custom refresh interval (secs)"
     echo "  -d              Debug mode"
+    echo "  --nodisplay     For testing without an I²C display"
     exit
 elif [ $1 = 's' ]; then
     screen -X -S $SCREEN_NAME quit
