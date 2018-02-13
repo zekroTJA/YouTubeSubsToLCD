@@ -35,18 +35,19 @@ if len(argv) > 0:
         logging = True
 
 
-if display:
-    from lib import lcddriver
-    lcd = lcddriver.lcd()
-    lcd.lcd_clear()
-
-
 with open('settings.json') as f:
     config = json.loads(f.read())
     if config['logging'] and logging == None:
         logging = config['logging']
-    if config['display-width']:
-        displaywidth = config['display-width']    
+    if config['display']['width']:
+        displaywidth = config['display']['width']  
+
+
+if display:
+    from lib import lcddriver
+    lcd = lcddriver.lcd(config['display']['adress'])
+    lcd.lcd_clear()
+ 
 
 def get_data():
     global subs, views, s_subs, time, s_delta, v_views, v_delta
