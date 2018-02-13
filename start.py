@@ -16,6 +16,7 @@ debug = False
 display = True
 lcd = None
 logging = None
+displaywidth = 16
 
 status = 'subs'
 
@@ -44,6 +45,8 @@ with open('settings.json') as f:
     config = json.loads(f.read())
     if config['logging'] and logging == None:
         logging = config['logging']
+    if config['display-width']:
+        displaywidth = config['display-width']    
 
 def get_data():
     global subs, views, s_subs, time, s_delta, v_views, v_delta
@@ -93,7 +96,7 @@ while (True):
 
     def _subs(mode):
         out = pointalize(subs if mode == 'subs' else views) + ' ' + mode[:1]
-        for i in range(0, 16 - len(out) - len(str(s_delta if mode == 'subs' else v_delta)) - 1):
+        for i in range(0, displaywidth - len(out) - len(str(s_delta if mode == 'subs' else v_delta)) - 1):
             out += ' '
         out += _delta(s_delta if mode == 'subs' else v_delta)
         return out
