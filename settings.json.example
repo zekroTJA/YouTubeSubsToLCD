@@ -3,7 +3,7 @@
     "channel": "zekrommaster110",
     "interval": 10,
     "logging": true,
-    "dispay": {
+    "display": {
         "width": 16,
         "address": "0x27"
     } 

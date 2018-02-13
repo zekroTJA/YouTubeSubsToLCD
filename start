@@ -19,6 +19,7 @@ error() {
 }
 
 if [ $1 = 'h' ] || [ $1 = 'help' ]; then
+    echo "-------------------------------------------------------" 
     echo "  h | help        Display help"
     echo "  s | stop        Stop current running screen"
     echo "  r | resume      Resume current running screen"
@@ -27,6 +28,7 @@ if [ $1 = 'h' ] || [ $1 = 'help' ]; then
     echo "  -i <interval>   Custom refresh interval (secs)"
     echo "  -d              Debug mode"
     echo "  --nodisplay     For testing without an I²C display"
+    echo "-------------------------------------------------------"
     exit
 elif [ $1 = 's' ]; then
     screen -X -S $SCREEN_NAME quit
