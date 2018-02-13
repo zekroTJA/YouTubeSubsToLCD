@@ -45,7 +45,7 @@ with open('settings.json') as f:
 
 if display:
     from lib import lcddriver
-    lcd = lcddriver.lcd(config['display']['adress'])
+    lcd = lcddriver.lcd(config['display']['address'])
     lcd.lcd_clear()
  
 
